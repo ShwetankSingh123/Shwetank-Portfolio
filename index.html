@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shwetank Singh — Game Developer</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg: #06060f;
+    --bg2: #0d0d1f;
+    --bg3: #111128;
+    --accent: #00ccdd;
+    --accent2: #4f46e5;
+    --text: #e8e8f0;
+    --muted: #888899;
+    --border: rgba(0,204,221,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px; height: 64px;
+    background: rgba(6,6,15,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; color: var(--accent); letter-spacing: 0.08em;
+  }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a {
+    font-size: 13px; color: var(--muted); text-decoration: none;
+    letter-spacing: 0.05em; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative; height: 100vh; overflow: hidden;
+    display: flex; align-items: center;
+  }
+  #three-canvas {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+  }
+  .hero-content {
+    position: relative; z-index: 2;
+    padding-left: 10vw; max-width: 560px;
+  }
+  .hero-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--accent);
+    letter-spacing: 0.12em; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .hero-tag::before {
+    content: ''; display: block;
+    width: 24px; height: 1px; background: var(--accent);
+  }
+  .hero-name {
+    font-size: clamp(40px, 6vw, 76px);
+    font-weight: 700; line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+  .hero-name span { color: var(--accent); }
+  .hero-sub {
+    margin-top: 16px; font-size: 16px; color: var(--muted);
+    line-height: 1.6; max-width: 400px;
+  }
+  .hero-btns {
+    margin-top: 36px; display: flex; gap: 14px; flex-wrap: wrap;
+  }
+  .btn-primary {
+    padding: 12px 28px; background: var(--accent); color: #06060f;
+    font-weight: 600; font-size: 13px; border-radius: 6px;
+    text-decoration: none; letter-spacing: 0.04em;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: #00aabb; transform: translateY(-1px); }
+  .btn-outline {
+    padding: 12px 28px; background: transparent; color: var(--text);
+    font-weight: 500; font-size: 13px; border-radius: 6px;
+    text-decoration: none; letter-spacing: 0.04em;
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+
+  .scroll-indicator {
+    position: absolute; bottom: 32px; left: 50%;
+    transform: translateX(-50%); z-index: 2;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    font-size: 11px; color: var(--muted); letter-spacing: 0.1em;
+  }
+  .scroll-line {
+    width: 1px; height: 40px; background: linear-gradient(to bottom, var(--accent), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+
+  /* ── SECTION BASE ── */
+  section {
+    padding: 100px 10vw;
+  }
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--accent); letter-spacing: 0.14em;
+    margin-bottom: 12px; display: flex; align-items: center; gap: 10px;
+  }
+  .section-label::after {
+    content: ''; flex: 1; max-width: 60px;
+    height: 1px; background: var(--accent); opacity: 0.4;
+  }
+  .section-title {
+    font-size: clamp(28px, 3.5vw, 44px);
+    font-weight: 700; letter-spacing: -0.02em;
+    margin-bottom: 48px;
+  }
+
+  /* ── ABOUT ── */
+  #about { background: var(--bg2); }
+  .about-grid {
+    display: grid; grid-template-columns: 300px 1fr; gap: 80px; align-items: start;
+  }
+  .about-avatar-wrap {
+    position: relative; width: 280px; height: 340px;
+  }
+  .about-avatar-wrap .frame {
+    position: absolute; inset: 0; border-radius: 12px;
+    border: 1px solid var(--border);
+    box-shadow: 0 0 60px rgba(0,204,221,0.08);
+  }
+  .about-avatar-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover; border-radius: 12px;
+    filter: grayscale(20%);
+  }
+  .about-avatar-wrap .accent-dot {
+    position: absolute; bottom: -12px; right: -12px;
+    width: 80px; height: 80px; border-radius: 50%;
+    background: var(--accent2); opacity: 0.18;
+    filter: blur(16px);
+  }
+  .about-tag-badge {
+    position: absolute; top: -12px; left: -12px;
+    background: var(--accent); color: #06060f;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+    padding: 5px 10px; border-radius: 4px;
+  }
+  .about-text h3 {
+    font-size: 22px; font-weight: 600; margin-bottom: 16px;
+  }
+  .about-text p {
+    font-size: 15px; color: var(--muted); line-height: 1.8;
+    margin-bottom: 20px;
+  }
+  .about-info-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px; margin-top: 28px;
+  }
+  .about-info-item {
+    padding: 14px 18px;
+    background: var(--bg3); border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .about-info-item .label {
+    font-size: 11px; color: var(--muted); letter-spacing: 0.08em;
+    margin-bottom: 4px; text-transform: uppercase;
+  }
+  .about-info-item .value {
+    font-size: 14px; color: var(--text); font-weight: 500;
+  }
+  .skills-bars { margin-top: 40px; }
+  .skill-row {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 14px;
+  }
+  .skill-name { font-size: 13px; color: var(--text); width: 130px; flex-shrink: 0; }
+  .skill-bar { flex: 1; height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+  .skill-fill {
+    height: 100%; background: linear-gradient(to right, var(--accent2), var(--accent));
+    border-radius: 2px; transition: width 1.2s ease;
+  }
+  .skill-pct { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); width: 36px; text-align: right; }
+
+  /* ── EXPERIENCE ── */
+  #experience { background: var(--bg); }
+  .exp-list { display: flex; flex-direction: column; gap: 2px; }
+  .exp-item {
+    padding: 32px 40px;
+    background: var(--bg2); border-radius: 12px;
+    border: 1px solid var(--border);
+    display: grid; grid-template-columns: 200px 1fr;
+    gap: 40px; align-items: start;
+    transition: border-color 0.2s;
+  }
+  .exp-item:hover { border-color: rgba(0,204,221,0.35); }
+  .exp-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--muted);
+    padding-top: 4px;
+  }
+  .exp-company {
+    font-size: 11px; color: var(--accent);
+    letter-spacing: 0.08em; margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .exp-role { font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+  .exp-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
+  .exp-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .exp-tag {
+    font-size: 11px; padding: 3px 10px; border-radius: 20px;
+    background: rgba(79,70,229,0.15); color: #a5b4fc;
+    border: 1px solid rgba(79,70,229,0.3);
+  }
+
+  /* ── PROJECTS ── */
+  #projects { background: var(--bg2); }
+  .filter-bar {
+    display: flex; gap: 8px; margin-bottom: 40px; flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 7px 18px; border-radius: 20px;
+    font-size: 12px; letter-spacing: 0.05em;
+    border: 1px solid var(--border); background: transparent;
+    color: var(--muted); cursor: pointer; transition: all 0.2s;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--accent); color: #06060f;
+    border-color: var(--accent); font-weight: 600;
+  }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+  }
+  .proj-card {
+    background: var(--bg3); border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow: hidden; cursor: pointer;
+    transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+    text-decoration: none; color: inherit; display: block;
+  }
+  .proj-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(0,204,221,0.4);
+    box-shadow: 0 20px 60px rgba(0,204,221,0.08);
+  }
+  .proj-img {
+    width: 100%; height: 180px; object-fit: cover;
+    display: block; filter: brightness(0.88);
+    transition: filter 0.25s;
+  }
+  .proj-card:hover .proj-img { filter: brightness(1); }
+  .proj-body { padding: 20px; }
+  .proj-cat {
+    font-size: 10px; letter-spacing: 0.1em; color: var(--accent);
+    text-transform: uppercase; margin-bottom: 6px;
+  }
+  .proj-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+  .proj-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .proj-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px;
+    border-top: 1px solid var(--border);
+  }
+  .proj-tech {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--muted);
+  }
+  .proj-link {
+    font-size: 12px; color: var(--accent);
+    text-decoration: none; letter-spacing: 0.04em;
+  }
+  .proj-link:hover { text-decoration: underline; }
+
+  /* ── EDUCATION ── */
+  #education { background: var(--bg); }
+  .edu-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+  }
+  .edu-card {
+    padding: 28px 24px;
+    background: var(--bg2); border-radius: 12px;
+    border: 1px solid var(--border);
+    transition: border-color 0.2s;
+  }
+  .edu-card:hover { border-color: rgba(0,204,221,0.35); }
+  .edu-year {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--accent); margin-bottom: 10px;
+  }
+  .edu-degree { font-size: 15px; font-weight: 600; margin-bottom: 6px; line-height: 1.4; }
+  .edu-school { font-size: 13px; color: var(--muted); }
+
+  /* ── CONTACT ── */
+  #contact {
+    background: var(--bg2);
+    text-align: center; padding: 100px 10vw 80px;
+  }
+  .contact-cards {
+    display: flex; justify-content: center; gap: 20px;
+    flex-wrap: wrap; margin-top: 48px;
+  }
+  .contact-card {
+    padding: 28px 36px;
+    background: var(--bg3); border-radius: 12px;
+    border: 1px solid var(--border);
+    text-decoration: none; color: var(--text);
+    transition: border-color 0.2s, transform 0.2s;
+    min-width: 200px; text-align: center;
+  }
+  .contact-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+  .contact-card .cc-icon { font-size: 22px; margin-bottom: 10px; }
+  .contact-card .cc-label { font-size: 11px; color: var(--muted); letter-spacing: 0.08em; margin-bottom: 4px; }
+  .contact-card .cc-value { font-size: 14px; font-weight: 500; color: var(--accent); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg); padding: 24px 10vw;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+  footer .foot-l {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--muted);
+  }
+  footer .foot-r { display: flex; gap: 20px; }
+  footer .foot-r a { font-size: 12px; color: var(--muted); text-decoration: none; }
+  footer .foot-r a:hover { color: var(--accent); }
+
+  /* ── 3D SCENE OVERLAY ── */
+  #hero-label {
+    position: absolute; right: 6vw; top: 50%;
+    transform: translateY(-50%); z-index: 2;
+    text-align: right; pointer-events: none;
+  }
+  #hero-label .hl-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--accent); letter-spacing: 0.1em;
+    margin-bottom: 6px; opacity: 0.7;
+  }
+  #hero-label .hl-hint {
+    font-size: 12px; color: var(--muted);
+  }
+
+  /* hidden filter */
+  .proj-card[data-cat].hidden { display: none; }
+
+  /* Responsive */
+  @media(max-width: 768px) {
+    nav { padding: 0 20px; }
+    .nav-links { gap: 16px; }
+    section { padding: 70px 6vw; }
+    .about-grid { grid-template-columns: 1fr; }
+    .about-avatar-wrap { width: 100%; height: 260px; }
+    .edu-grid { grid-template-columns: 1fr; }
+    .exp-item { grid-template-columns: 1fr; gap: 8px; }
+    #hero-label { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">&lt; SHWETANK.DEV /&gt;</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#experience">Experience</a>
+    <a href="#projects">Projects</a>
+    <a href="#education">Education</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO with 3D -->
+<section id="hero">
+  <canvas id="three-canvas"></canvas>
+
+  <div class="hero-content">
+    <div class="hero-tag">GAME DEVELOPER · UNITY SPECIALIST</div>
+    <h1 class="hero-name">SHWETANK<br><span>SINGH</span></h1>
+    <p class="hero-sub">Building immersive games with Unity & C#. UI/UX Designer. Published on Google Play & itch.io. Currently at Almace Interactive.</p>
+    <div class="hero-btns">
+      <a href="#projects" class="btn-primary">View Projects</a>
+      <a href="#contact" class="btn-outline">Get In Touch</a>
+    </div>
+  </div>
+
+  <div id="hero-label">
+    <div class="hl-tag">3D AVATAR · DRAG TO ROTATE</div>
+    <div class="hl-hint">Interactive scene ↓</div>
+  </div>
+
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    <span>SCROLL</span>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">01 — ABOUT</div>
+  <h2 class="section-title">Who I Am</h2>
+  <div class="about-grid">
+    <div class="about-avatar-wrap">
+      <img src="https://shwetanksingh123.github.io/Shwetank-Portfolios/assets/images/my-avatar.png" alt="Shwetank Singh">
+      <div class="frame"></div>
+      <div class="accent-dot"></div>
+      <div class="about-tag-badge">UNITY DEV</div>
+    </div>
+    <div class="about-text">
+      <h3>Game Developer & UI/UX Designer</h3>
+      <p>I'm a Game Developer from Gorakhpur, India, working full-time at Almace Interactive. I enjoy turning complex problems into simple, beautiful and intuitive game experiences.</p>
+      <p>My job is to build games that are functional, user-friendly, and visually attractive. I add a personal touch to every product and make sure it's eye-catching and engaging.</p>
+      <div class="about-info-grid">
+        <div class="about-info-item">
+          <div class="label">Location</div>
+          <div class="value">Gorakhpur, India</div>
+        </div>
+        <div class="about-info-item">
+          <div class="label">Email</div>
+          <div class="value">ssingh.21.2019@gmail.com</div>
+        </div>
+        <div class="about-info-item">
+          <div class="label">Phone</div>
+          <div class="value">+91 8795835630</div>
+        </div>
+        <div class="about-info-item">
+          <div class="label">Status</div>
+          <div class="value" style="color:var(--accent)">● Available for work</div>
+        </div>
+      </div>
+      <div class="skills-bars">
+        <div class="skill-row">
+          <span class="skill-name">Unity Engine</span>
+          <div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div>
+          <span class="skill-pct">90%</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-name">C# Programming</span>
+          <div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div>
+          <span class="skill-pct">80%</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-name">Graphic Design</span>
+          <div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div>
+          <span class="skill-pct">90%</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-name">Version Control</span>
+          <div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div>
+          <span class="skill-pct">80%</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-name">WordPress / PHP</span>
+          <div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div>
+          <span class="skill-pct">70%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-label">02 — EXPERIENCE</div>
+  <h2 class="section-title">Work History</h2>
+  <div class="exp-list">
+    <div class="exp-item">
+      <div>
+        <div class="exp-date">Sep 2024 — Present</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:6px">Full-time</div>
+      </div>
+      <div>
+        <div class="exp-company">Almace Interactive Pvt. Ltd.</div>
+        <div class="exp-role">Unity Developer</div>
+        <div class="exp-desc">Developing multi-platform Unity games — Sweet Hit, Carrom Live, Yatzy, and The Pixelanders. Writing scalable C# code for gameplay mechanics, UI systems, and performance optimisation. Owning features end-to-end from prototype to live release in a lean, high-ownership indie studio.</div>
+        <div class="exp-tags">
+          <span class="exp-tag">Unity3D</span>
+          <span class="exp-tag">C#</span>
+          <span class="exp-tag">Mobile</span>
+          <span class="exp-tag">PC</span>
+          <span class="exp-tag">Game Design</span>
+        </div>
+      </div>
+    </div>
+    <div style="margin: 8px 0;"></div>
+    <div class="exp-item">
+      <div>
+        <div class="exp-date">Jun 2024 — Aug 2024</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:6px">Internship</div>
+      </div>
+      <div>
+        <div class="exp-company">Almace Interactive Pvt. Ltd.</div>
+        <div class="exp-role">Unity Developer Intern</div>
+        <div class="exp-desc">Contributed to active Unity projects and delivered gameplay features, UI components, and bug fixes. Strong performance led to a full-time offer within 3 months. Adopted the studio's Git workflows and agile development pipeline.</div>
+        <div class="exp-tags">
+          <span class="exp-tag">Unity3D</span>
+          <span class="exp-tag">C#</span>
+          <span class="exp-tag">Git</span>
+          <span class="exp-tag">Agile</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">03 — PROJECTS</div>
+  <h2 class="section-title">My Work</h2>
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterProjects('all', this)">All</button>
+    <button class="filter-btn" onclick="filterProjects('game', this)">Game Development</button>
+    <button class="filter-btn" onclick="filterProjects('art', this)">Digital Art</button>
+    <button class="filter-btn" onclick="filterProjects('web', this)">Web Development</button>
+  </div>
+  <div class="projects-grid" id="projects-grid">
+
+    <a class="proj-card" data-cat="game" href="https://shwetanksingh.itch.io/sphere-shooter" target="_blank">
+      <img class="proj-img" src="https://shwetanksingh123.github.io/Shwetank-Portfolios/assets/images/SphereShooter.png" alt="Sphere Shooter">
+      <div class="proj-body">
+        <div class="proj-cat">Game Development</div>
+        <div class="proj-title">Sphere Shooter</div>
+        <div class="proj-desc">Fast-paced endless shooter with dynamic enemy spawning, explosion SFX, health pickups, and complete Main Menu UI.</div>
+      </div>
+      <div class="proj-footer">
+        <span class="proj-tech">Unity3D · C#</span>
+        <span class="proj-link">Play on itch.io →</span>
+      </div>
+    </a>
+
+    <a class="proj-card" data-cat="game" href="https://play.google.com/store/apps/details?id=com.SKGames.ZombieHunter" target="_blank">
+      <img class="proj-img" src="https://shwetanksingh123.github.io/Shwetank-Portfolios/assets/images/saveSquad.png" alt="Save Squad">
+      <div class="proj-body">
+        <div class="proj-cat">Game Development · Published</div>
+        <div class="proj-title">Save Squad — Zombie Hunter</div>
+        <div class="proj-desc">Full-cycle mobile game published on Google Play. Mechanics, art, UI, Android build, and Play Store publishing handled end-to-end.</div>
+      </div>
+      <div class="proj-footer">
+        <span class="proj-tech">Unity3D · Android</span>
+        <span class="proj-link">Google Play →</span>
+      </div>
+    </a>
+
+    <a class="proj-card" data-cat="game" href="https://shwetanksingh.itch.io/hit-the-score" target="_blank">
+      <img class="proj-img" src="https://shwetanksingh123.github.io/Shwetank-Portfolios/assets/images/hitthescore.png" alt="Hit The Score">
+      <div class="proj-body">
+        <div class="proj-cat">Game Development</div>
+        <div class="proj-title">Hit The Score</div>
+        <div class="proj-desc">Reflex arcade game with procedurally generated obstacles, fail condition scoring system, and complete UI built from scratch.</div>
+      </div>
+      <div class="proj-footer">
+        <span class="proj-tech">Unity3D · C#</span>
+        <span class="proj-link">Play on itch.io →</span>
+      </div>
+    </a>
+
+    <a class="proj-card" data-cat="art" href="https://www.behance.net/gallery/157919303/Warrior/modules/891005659" target="_blank">
+      <img class="proj-img" src="https://shwetanksingh123.github.io/Shwetank-Portfolios/assets/images/warrior.png" alt="Warrior">
+      <div class="proj-body">
+        <div class="proj-cat">Digital Art</div>
+        <div class="proj-title">Warrior</div>
+        <div class="proj-desc">Digital illustration showcasing detailed character design and visual storytelling through graphic design.</div>
+      </div>
+      <div class="proj-footer">
+        <span class="proj-tech">Digital Art · Illustration</span>
+        <span class="proj-link">View on Behance →</span>
+      </div>
+    </a>
+
+    <a class="proj-card" data-cat="art" href="https://www.behance.net/gallery/157924389/Beauty-Girl/modules/891031807" target="_blank">
+      <img class="proj-img" src="https://shwetanksingh123.github.io/Shwetank-Portfolios/assets/images/rainyDay.png" alt="Rainy Day">
+      <div class="proj-body">
+        <div class="proj-cat">Digital Art</div>
+        <div class="proj-title">Rainy Day</div>
+        <div class="proj-desc">Atmospheric digital artwork capturing mood and emotion through illustration and character design.</div>
+      </div>
+      <div class="proj-footer">
+        <span class="proj-tech">Digital Art · Illustration</span>
+        <span class="proj-link">View on Behance →</span>
+      </div>
+    </a>
+
+    <a class="proj-card" data-cat="art" href="#" target="_blank">
+      <img class="proj-img" src="https://shwetanksingh123.github.io/Shwetank-Portfolios/assets/images/morninggirl.png" alt="Morning Girl">
+      <div class="proj-body">
+        <div class="proj-cat">Digital Art</div>
+        <div class="proj-title">Morning Girl</div>
+        <div class="proj-desc">Serene digital illustration with soft tones and expressive character design work.</div>
+      </div>
+      <div class="proj-footer">
+        <span class="proj-tech">Digital Art</span>
+        <span class="proj-link">View →</span>
+      </div>
+    </a>
+
+    <a class="proj-card" data-cat="web" href="https://edu.ieee.org/in-bansaliet/" target="_blank">
+      <img class="proj-img" src="https://shwetanksingh123.github.io/Shwetank-Portfolios/assets/images/wordpress02.png" alt="IEEE Website">
+      <div class="proj-body">
+        <div class="proj-cat">Web Development</div>
+        <div class="proj-title">IEEE Student-Committee Website</div>
+        <div class="proj-desc">Official IEEE student committee website for Bansal IET. Events, members, and announcements managed via WordPress and PHP.</div>
+      </div>
+      <div class="proj-footer">
+        <span class="proj-tech">WordPress · PHP</span>
+        <span class="proj-link">Visit Site →</span>
+      </div>
+    </a>
+
+    <a class="proj-card" data-cat="web" href="https://com207870358.wordpress.com/" target="_blank">
+      <img class="proj-img" src="https://shwetanksingh123.github.io/Shwetank-Portfolios/assets/images/wordpress01.png" alt="BlogMaster">
+      <div class="proj-body">
+        <div class="proj-cat">Web Development</div>
+        <div class="proj-title">Personal BlogMaster Website</div>
+        <div class="proj-desc">Personal blog platform built on WordPress. Articles on game development, Unity Engine, and tech topics.</div>
+      </div>
+      <div class="proj-footer">
+        <span class="proj-tech">WordPress</span>
+        <span class="proj-link">Visit Blog →</span>
+      </div>
+    </a>
+
+    <a class="proj-card" data-cat="web" href="https://shwetanksingh123.github.io/placement-website-bansal/" target="_blank">
+      <img class="proj-img" src="https://shwetanksingh123.github.io/Shwetank-Portfolios/assets/images/bansalPlacementWebsite.png" alt="Placement Website">
+      <div class="proj-body">
+        <div class="proj-cat">Web Development</div>
+        <div class="proj-title">Bansal Placement Website</div>
+        <div class="proj-desc">College placement portal built with HTML, CSS, and JavaScript, hosted on GitHub Pages.</div>
+      </div>
+      <div class="proj-footer">
+        <span class="proj-tech">HTML · CSS · JS</span>
+        <span class="proj-link">Visit Site →</span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-label">04 — EDUCATION</div>
+  <h2 class="section-title">Academic Background</h2>
+  <div class="edu-grid">
+    <div class="edu-card">
+      <div class="edu-year">2020 — 2024</div>
+      <div class="edu-degree">Bachelor of Technology — Computer Science & Engineering</div>
+      <div class="edu-school">Bansal Institute of Engineering & Technology, Lucknow</div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-year">2018 — 2020</div>
+      <div class="edu-degree">Senior Secondary — Science (CBSE)</div>
+      <div class="edu-school">Urmil Unique Central Academy</div>
+    </div>
+    <div class="edu-card">
+      <div class="edu-year">2018</div>
+      <div class="edu-degree">High School (CBSE)</div>
+      <div class="edu-school">St. Anthony's Convent School</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label" style="justify-content:center">05 — CONTACT</div>
+  <h2 class="section-title">Let's Connect</h2>
+  <p style="color:var(--muted);font-size:15px;max-width:420px;margin:0 auto">Open to new opportunities, collaborations, or just a conversation about game development.</p>
+  <div class="contact-cards">
+    <a class="contact-card" href="mailto:ssingh.21.2019@gmail.com">
+      <div class="cc-icon">✉</div>
+      <div class="cc-label">Email</div>
+      <div class="cc-value">ssingh.21.2019@gmail.com</div>
+    </a>
+    <a class="contact-card" href="tel:+918795835630">
+      <div class="cc-icon">☎</div>
+      <div class="cc-label">Phone</div>
+      <div class="cc-value">+91 8795835630</div>
+    </a>
+    <a class="contact-card" href="https://shwetanksingh.itch.io" target="_blank">
+      <div class="cc-icon">🎮</div>
+      <div class="cc-label">itch.io</div>
+      <div class="cc-value">shwetanksingh.itch.io</div>
+    </a>
+    <a class="contact-card" href="https://almaceinteractive.com" target="_blank">
+      <div class="cc-icon">🏢</div>
+      <div class="cc-label">Studio</div>
+      <div class="cc-value">Almace Interactive</div>
+    </a>
+    <a class="contact-card" href="https://shwetanksingh123.github.io/Shwetank-Portfolios/" target="_blank">
+      <div class="cc-icon">🌐</div>
+      <div class="cc-label">Portfolio</div>
+      <div class="cc-value">GitHub Portfolio</div>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-l">© 2025 Shwetank Singh — Game Developer</div>
+  <div class="foot-r">
+    <a href="https://shwetanksingh.itch.io" target="_blank">itch.io</a>
+    <a href="https://www.behance.net/gallery/157919303/Warrior" target="_blank">Behance</a>
+    <a href="https://almaceinteractive.com" target="_blank">Almace Interactive</a>
+    <a href="mailto:ssingh.21.2019@gmail.com">Email</a>
+  </div>
+</footer>
+
+<!-- THREE.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ── 3D HERO SCENE ──
+const canvas = document.getElementById('three-canvas');
+const W = canvas.parentElement.offsetWidth;
+const H = canvas.parentElement.offsetHeight;
+
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(W, H);
+renderer.shadowMap.enabled = true;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.1;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x06060f);
+scene.fog = new THREE.FogExp2(0x06060f, 0.028);
+
+const camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 100);
+camera.position.set(4.5, 1.5, 7);
+camera.lookAt(2, 0, 0);
+
+// Lighting
+scene.add(new THREE.AmbientLight(0x223355, 1.5));
+const key = new THREE.DirectionalLight(0xffffff, 1.2);
+key.position.set(5, 8, 4); key.castShadow = true;
+scene.add(key);
+const fill = new THREE.DirectionalLight(0x00ccdd, 0.4);
+fill.position.set(-6, 2, -3);
+scene.add(fill);
+const rim = new THREE.DirectionalLight(0x4f46e5, 0.5);
+rim.position.set(0, 4, -8);
+scene.add(rim);
+
+// Accent point lights
+const pl1 = new THREE.PointLight(0x00ccdd, 3, 10);
+pl1.position.set(6, 3, 2); scene.add(pl1);
+const pl2 = new THREE.PointLight(0x4f46e5, 2, 8);
+pl2.position.set(2, 5, -2); scene.add(pl2);
+
+// Grid floor
+const grid = new THREE.GridHelper(40, 40, 0x1a1a3a, 0x0d0d22);
+grid.position.y = -2.5; scene.add(grid);
+
+// Stars
+const sg = new THREE.BufferGeometry();
+const sp = new Float32Array(600 * 3);
+for(let i=0;i<600*3;i++) sp[i] = (Math.random()-0.5)*80;
+sg.setAttribute('position', new THREE.BufferAttribute(sp,3));
+scene.add(new THREE.Points(sg, new THREE.PointsMaterial({color:0xffffff,size:0.05,sizeAttenuation:true})));
+
+// ── AVATAR CARD (Shwetank's photo) ──
+const avatarGroup = new THREE.Group();
+scene.add(avatarGroup);
+avatarGroup.position.set(5.5, 0.2, 0.5);
+
+// Card body
+const cardGeo = new THREE.BoxGeometry(2.2, 2.8, 0.08);
+const cardMat = new THREE.MeshStandardMaterial({ color: 0x0d0d2a, metalness: 0.5, roughness: 0.5 });
+const cardMesh = new THREE.Mesh(cardGeo, cardMat);
+cardMesh.castShadow = true;
+avatarGroup.add(cardMesh);
+
+// Load avatar texture onto card face
+const txLoader = new THREE.TextureLoader();
+txLoader.crossOrigin = 'anonymous';
+txLoader.load(
+  'https://shwetanksingh123.github.io/Shwetank-Portfolios/assets/images/my-avatar.png',
+  (tex) => {
+    const photoGeo = new THREE.PlaneGeometry(1.9, 2.0);
+    const photoMat = new THREE.MeshStandardMaterial({ map: tex, metalness: 0.1, roughness: 0.8 });
+    const photo = new THREE.Mesh(photoGeo, photoMat);
+    photo.position.set(0, 0.2, 0.045);
+    avatarGroup.add(photo);
+  }
+);
+
+// Card glow border
+const borderGeo = new THREE.EdgesGeometry(new THREE.BoxGeometry(2.22, 2.82, 0.09));
+const borderMat = new THREE.LineBasicMaterial({ color: 0x00ccdd });
+avatarGroup.add(new THREE.LineSegments(borderGeo, borderMat));
+
+// Name plate below card
+const namePlateGeo = new THREE.BoxGeometry(2.2, 0.55, 0.06);
+const namePlateMat = new THREE.MeshStandardMaterial({ color: 0x00ccdd, metalness: 0.7, roughness: 0.3, emissive: 0x004455, emissiveIntensity: 0.5 });
+const namePlate = new THREE.Mesh(namePlateGeo, namePlateMat);
+namePlate.position.y = -1.7;
+avatarGroup.add(namePlate);
+
+// Role badge
+const badgeGeo = new THREE.BoxGeometry(1.6, 0.32, 0.06);
+const badgeMat = new THREE.MeshStandardMaterial({ color: 0x4f46e5, emissive: 0x2020aa, emissiveIntensity: 0.4, metalness: 0.6, roughness: 0.4 });
+const badge = new THREE.Mesh(badgeGeo, badgeMat);
+badge.position.y = -2.1;
+avatarGroup.add(badge);
+
+// ── FLOATING PROJECT THUMBNAILS ──
+const projects = [
+  { img: 'https://shwetanksingh123.github.io/Shwetank-Portfolios/assets/images/SphereShooter.png', x: -4, y: 1.2, z: -1, color: 0x00ccdd },
+  { img: 'https://shwetanksingh123.github.io/Shwetank-Portfolios/assets/images/saveSquad.png',     x: -1, y: 2.0, z: -3, color: 0x22c55e },
+  { img: 'https://shwetanksingh123.github.io/Shwetank-Portfolios/assets/images/hitthescore.png',   x: 2,  y: 2.5, z: -4, color: 0xf59e0b },
+  { img: 'https://shwetanksingh123.github.io/Shwetank-Portfolios/assets/images/warrior.png',        x: -5, y: -0.5,z: 1,  color: 0xf43f5e },
+  { img: 'https://shwetanksingh123.github.io/Shwetank-Portfolios/assets/images/rainyDay.png',       x: 8,  y: 1.0, z: -2, color: 0xa78bfa },
+];
+
+const projMeshes = [];
+projects.forEach((p, i) => {
+  const grp = new THREE.Group();
+  grp.position.set(p.x, p.y, p.z);
+  grp.userData.floatOffset = i * 1.1;
+
+  const geo = new THREE.PlaneGeometry(1.4, 0.92);
+  const mat = new THREE.MeshStandardMaterial({ color: 0x111122, metalness: 0.3, roughness: 0.7 });
+  const mesh = new THREE.Mesh(geo, mat);
+  grp.add(mesh);
+
+  // Load texture
+  txLoader.load(p.img, (tex) => {
+    mesh.material = new THREE.MeshStandardMaterial({ map: tex, metalness: 0.1, roughness: 0.8 });
+  });
+
+  // Glow border
+  const eg = new THREE.EdgesGeometry(new THREE.BoxGeometry(1.42, 0.94, 0.01));
+  grp.add(new THREE.LineSegments(eg, new THREE.LineBasicMaterial({ color: p.color })));
+
+  // Glow plane behind
+  const glowGeo = new THREE.PlaneGeometry(1.6, 1.1);
+  const glowMat = new THREE.MeshBasicMaterial({ color: p.color, transparent: true, opacity: 0.05, side: THREE.DoubleSide });
+  const glowM = new THREE.Mesh(glowGeo, glowMat);
+  glowM.position.z = -0.02;
+  grp.add(glowM);
+
+  grp.lookAt(camera.position);
+  scene.add(grp);
+  projMeshes.push(grp);
+});
+
+// ── FLOATING RINGS (decorative) ──
+[
+  { r: 1.2, t: 0.06, c: 0x00ccdd, pos: [4.5, 3.5, -1] },
+  { r: 0.7, t: 0.04, c: 0x4f46e5, pos: [0, 2.5, -2] },
+  { r: 0.5, t: 0.035, c: 0xf59e0b, pos: [-3, 1, -0.5] },
+].forEach(d => {
+  const geo = new THREE.TorusGeometry(d.r, d.t, 16, 60);
+  const mat = new THREE.MeshStandardMaterial({ color: d.c, emissive: d.c, emissiveIntensity: 0.4, metalness: 0.8, roughness: 0.2 });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.set(...d.pos);
+  mesh.userData.isRing = true;
+  scene.add(mesh);
+});
+
+// ── PARTICLE TRAIL ──
+const trailGeo = new THREE.BufferGeometry();
+const trailCount = 80;
+const trailPos = new Float32Array(trailCount * 3);
+for(let i = 0; i < trailCount; i++) {
+  trailPos[i*3]   = (Math.random() - 0.5) * 16;
+  trailPos[i*3+1] = (Math.random() - 0.5) * 6 + 1;
+  trailPos[i*3+2] = (Math.random() - 0.5) * 8;
+}
+trailGeo.setAttribute('position', new THREE.BufferAttribute(trailPos, 3));
+const trailMat = new THREE.PointsMaterial({ color: 0x00ccdd, size: 0.06, sizeAttenuation: true, transparent: true, opacity: 0.6 });
+scene.add(new THREE.Points(trailGeo, trailMat));
+
+// ── ORBIT CONTROLS (manual) ──
+let isDrag = false, prevX = 0, prevY = 0;
+let theta = 0.4, phi = 1.15, camR = 9;
+let tTheta = 0.4, tPhi = 1.15, tR = 9;
+
+canvas.addEventListener('mousedown', e => { isDrag = false; prevX = e.clientX; prevY = e.clientY; });
+canvas.addEventListener('mousemove', e => {
+  if (!e.buttons) return;
+  const dx = e.clientX - prevX, dy = e.clientY - prevY;
+  if (Math.abs(dx)+Math.abs(dy) > 3) isDrag = true;
+  if (e.buttons === 1) {
+    tTheta -= dx * 0.006;
+    tPhi = Math.max(0.4, Math.min(1.5, tPhi + dy * 0.005));
+    prevX = e.clientX; prevY = e.clientY;
+  }
+});
+canvas.addEventListener('wheel', e => { tR = Math.max(5, Math.min(16, tR + e.deltaY * 0.012)); });
+canvas.addEventListener('touchstart', e => { prevX = e.touches[0].clientX; prevY = e.touches[0].clientY; }, { passive:true });
+canvas.addEventListener('touchmove', e => {
+  const dx = e.touches[0].clientX - prevX, dy = e.touches[0].clientY - prevY;
+  tTheta -= dx * 0.006; tPhi = Math.max(0.4, Math.min(1.5, tPhi + dy * 0.005));
+  prevX = e.touches[0].clientX; prevY = e.touches[0].clientY;
+}, { passive:true });
+
+// ── ANIMATION ──
+let t = 0;
+const ringMeshes = scene.children.filter(c => c.userData.isRing);
+
+function animate() {
+  requestAnimationFrame(animate);
+  t += 0.01;
+
+  // Smooth camera
+  theta += (tTheta - theta) * 0.07;
+  phi   += (tPhi - phi) * 0.07;
+  camR  += (tR - camR) * 0.07;
+  const sinP = Math.sin(phi), cosP = Math.cos(phi);
+  const sinT = Math.sin(theta), cosT = Math.cos(theta);
+  camera.position.set(
+    2 + camR * sinT * sinP,
+    camR * cosP + 0.5,
+    camR * cosT * sinP
+  );
+  camera.lookAt(2, 0.5, 0);
+
+  // Avatar card float + slow rotate
+  avatarGroup.position.y = 0.2 + Math.sin(t * 0.6) * 0.15;
+  avatarGroup.rotation.y = Math.sin(t * 0.25) * 0.2;
+
+  // Project panels float & face camera
+  projMeshes.forEach((grp, i) => {
+    grp.position.y += Math.sin(t * 0.5 + grp.userData.floatOffset) * 0.003;
+    grp.rotation.y = Math.sin(t * 0.2 + i) * 0.15;
+    grp.rotation.x = Math.sin(t * 0.15 + i * 0.8) * 0.06;
+  });
+
+  // Rings spin
+  ringMeshes.forEach((r, i) => {
+    r.rotation.x = t * (0.3 + i * 0.1);
+    r.rotation.y = t * (0.2 + i * 0.07);
+  });
+
+  // Pulsing lights
+  pl1.intensity = 3 + Math.sin(t * 0.8) * 0.8;
+  pl2.intensity = 2 + Math.cos(t * 1.1) * 0.6;
+
+  renderer.render(scene, camera);
+}
+animate();
+
+// ── RESIZE ──
+window.addEventListener('resize', () => {
+  const w = canvas.parentElement.offsetWidth;
+  const h = canvas.parentElement.offsetHeight;
+  renderer.setSize(w, h);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+});
+
+// ── PROJECT FILTER ──
+function filterProjects(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.proj-card').forEach(card => {
+    if (cat === 'all' || card.dataset.cat === cat) {
+      card.classList.remove('hidden');
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+}
+
+// ── SCROLL ANIMATIONS ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.proj-card, .exp-item, .edu-card, .contact-card').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(24px)';
+  el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
+HTMLEOF
